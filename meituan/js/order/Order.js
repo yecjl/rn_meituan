@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 
-class Find extends React.Component {
+class Order extends React.Component {
     constructor(props) {
         super(props);
 
@@ -18,6 +18,6 @@ class Find extends React.Component {
     }
 }
 
-Find.propTypes = {};
+Order.propTypes = {};
 
-export default Find;
+export default Order;

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, Image, TextInput, StatusBar, StyleSheet} from 'react-native';
 import HomeDetail from "./HomeDetail";
+import BannerScrollView from "./BannerScrollView";
 
 var Dimensions = require("Dimensions");
 var {width, height} = Dimensions.get('window');
@@ -27,8 +28,9 @@ class Home extends React.Component {
     render() {
         return (
             <View>
-                <StatusBar backgroundColor="rgba(255,96,0,1.0)"/>
+                <StatusBar backgroundColor="rgba(255,96,0,1.0)" barStyle={"light-content"}/>
                 {this.getNavigationBar()}
+                <BannerScrollView />
                 <Text onPress={this._pressToHomeDetail.bind(this)}>
                     Home
                 </Text>
@@ -57,8 +59,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         height: 60,
         backgroundColor: "rgba(255,96,0,1.0)",
-        position: "relative",
-        top: -10
+        marginTop: -10,
     },
     locationStyle: {
         color: 'white'
