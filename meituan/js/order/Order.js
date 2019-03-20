@@ -42,6 +42,14 @@ class Order extends React.Component {
                 // 下拉刷新相关
                 onRefresh={() => this._onRefresh()}
                 refreshing={this.state.isRefresh}
+                // refreshControl={
+                //     <RefreshControl
+                //         title={"loading"}
+                //         color={"red"}
+                //         tintColor={"orange"}
+                //         titleColor={"red"}
+                //     />
+                // }
                 //加载更多
                 onEndReached={() => this._onLoadMore()}
                 onEndReachedThreshold={0.1}
@@ -74,7 +82,7 @@ class Order extends React.Component {
 
     _onLoadMore() {
         // 不处于正在加载更多 && 有下拉刷新过，因为没数据的时候 会触发加载
-        if (!this.state.isLoadMore && this.state.data.length > 0) {
+        if (!this.state.isLoadMore && this.state.dataArr.length > 0) {
             var page = this.state.page;
             this.setState({page: page + 1}) // loading
             this.fetchData()
