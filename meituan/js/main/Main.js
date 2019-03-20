@@ -12,7 +12,7 @@ class Main extends React.Component {
         super(props);
 
         this.state = {
-            selectedTab: 'home'
+            selectedTab: 'order'
         };
 
     }
