@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList, RefreshControl, TouchableHighlight, StyleSheet} from 'react-native';
+import {View, Text, FlatList, RefreshControl, TouchableHighlight, ActivityIndicator, StyleSheet} from 'react-native';
 
 var Dimensions = require("Dimensions");
 var {width, height} = Dimensions.get("window");
-const CITY_NAMES = ['北京', '上海', '广州', '深圳', '杭州', '苏州', '成都', '武汉', '郑州', '洛阳', '厦门', '青岛', '拉萨'];
 
 class Order extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            dataArr: CITY_NAMES,
+            dataArr: [],
             // 当前页
             page: 1,
             // 下拉刷新
@@ -40,16 +39,16 @@ class Order extends React.Component {
                 // 添加尾布局
                 ListFooterComponent={this._renderFootView()}
                 // 下拉刷新相关
-                onRefresh={() => this._onRefresh()}
-                refreshing={this.state.isRefresh}
-                // refreshControl={
-                //     <RefreshControl
-                //         title={"loading"}
-                //         color={"red"}
-                //         tintColor={"orange"}
-                //         titleColor={"red"}
-                //     />
-                // }
+                refreshControl={
+                    <RefreshControl
+                        title={"danke"}
+                        tintColor="#bbb"
+                        colors={['#ff0000', '#0398ff']}
+                        progressBackgroundColor='#000000'
+                        onRefresh={() => this._onRefresh()}
+                        refreshing={this.state.isRefresh}
+                    />
+                }
                 //加载更多
                 onEndReached={() => this._onLoadMore()}
                 onEndReachedThreshold={0.1}
@@ -90,25 +89,29 @@ class Order extends React.Component {
     }
 
     fetchData() {
-        setTimeout(() => {
-            var newDataArr = [];
-            if (this.state.page == 1) {
-                console.log("重新加载");
-                for (let i = 0; i < CITY_NAMES.length; i++) {
-                    newDataArr.push(CITY_NAMES[i] + i);
+        var newDataArr = [];
+        var url = "http://api.wangshuwen.com/getRegion";
+        console.log("danke: url = " + url);
+        fetch(url)
+            .then(res => res.json())
+            .then(json => {
+                var data = json.data
+                if (this.state.page == 1) {
+                    console.log("重新加载");
+                    for (let i = 0; i < data.length; i++) {
+                        newDataArr.push(data[i].name);
+                    }
+                    this.setState({dataArr: newDataArr});
+                    this.setState({isRefresh: false}); // 隐藏loading
+                } else {
+                    console.log("加载更多");
+                    for (let i = 0; i < data.length; i++) {
+                        newDataArr.push(CITY_NAMES[i] + i + CITY_NAMES[i]);
+                    }
+                    var dataArr = this.state.dataArr;
+                    this.setState({dataArr: dataArr.concat(dataArr)});
                 }
-                this.setState({dataArr: newDataArr});
-                this.setState({isRefresh: false}); // 隐藏loading
-            } else {
-                console.log("加载更多");
-                for (let i = 0; i < CITY_NAMES.length; i++) {
-                    newDataArr.push(CITY_NAMES[i] + i + CITY_NAMES[i]);
-                }
-                var dataArr = this.state.dataArr;
-                this.setState({dataArr: dataArr.concat(dataArr)});
-            }
-
-        }, 1000)
+            }).done();
     }
 
     renderEmptyView() {
@@ -125,8 +128,15 @@ class Order extends React.Component {
 
     _renderFootView() {
         return (
-            <Text style={styles.itemTextStyle}>foot</Text>
+            <View style={styles.footViewStyle}>
+                <ActivityIndicator size={"small"} animating={true} color={['#ff0000', '#0398ff']}></ActivityIndicator>
+                <Text style={{marginLeft: 10}}>正在加载更多...</Text>
+            </View>
         )
+    }
+
+    componentDidMount(): void {
+        this.fetchData();
     }
 
 }
@@ -145,6 +155,14 @@ const styles = StyleSheet.create({
     separatorStyle: {
         width: width,
         height: 5,
+    },
+    footViewStyle: {
+        width: width,
+        height: 30,
+        flexDirection: "row",
+        backgroundColor: "#ffaeef",
+        justifyContent: "center",
+        alignItems: "center"
     }
 })
 
