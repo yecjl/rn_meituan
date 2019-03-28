@@ -105,9 +105,6 @@ class Order extends React.Component {
                     this.setState({isRefresh: false}); // 隐藏loading
                 } else {
                     console.log("加载更多");
-                    for (let i = 0; i < data.length; i++) {
-                        newDataArr.push(CITY_NAMES[i] + i + CITY_NAMES[i]);
-                    }
                     var dataArr = this.state.dataArr;
                     this.setState({dataArr: dataArr.concat(dataArr)});
                 }
